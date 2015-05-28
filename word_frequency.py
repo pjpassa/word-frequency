@@ -1,13 +1,14 @@
 import re
+import sys
 from collections import defaultdict
 
 
 # Functions
 
 # Takes a string, keeps characters and numbers, and lowercases them.
-def reformat(text):
+def reformat(text, regex=r'[^A-Za-z1-9 ]'):
     text = re.sub(r'[\n]', " ", text)
-    text = re.sub(r'[^A-Za-z1-9 ]', "", text)
+    text = re.sub(regex, "", text)
     text = re.sub(r'[ *]', " ", text)
     text = text.lower()
     return text
@@ -18,8 +19,13 @@ def word_frequency(file_text):
     file_text = reformat(file_text)
     word_list = file_text.split()
     histogram = defaultdict(int)
+    with open("ignored_words.txt") as f:
+        ignored_words = f.read()
+    ignored_words = reformat(ignored_words, r'[^A-Za-z1-9,]')
+    ignored_list = ignored_words.split(",")
     for word in word_list:
-        histogram[word] += 1
+        if word not in ignored_list:
+            histogram[word] += 1
     return dict(histogram)
 
 
@@ -34,11 +40,17 @@ def top_words(word_dictionary, number):
 
 # Takes a list of tuples and prints them.
 def print_results(word_list):
+    max_word_length = 0
+    for word, x in word_list:
+        max_word_length = max([max_word_length, len(word)])
+    scale = word_list[0][1]/50
     for word, count in word_list:
-        print("{} {}".format(word, count))
+        count_text = "#"*int(count//scale)
+        word_text = word + " "*(max_word_length - len(word))
+        print("{} {}".format(word_text, count_text))
 
 # Read file.
-with open('sample.txt') as f:
+with open(sys.argv[1]) as f:
     file_text = f.read()
 
 # Create dictionary.
