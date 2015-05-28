@@ -1,9 +1,8 @@
+import re
 from collections import defaultdict
-from re import sub
 
 
 # Functions
-
 
 # Takes a string, keeps characters and numbers, and lowercases them.
 def reformat(text):
@@ -18,15 +17,17 @@ def reformat(text):
 def word_frequency(file_text):
     file_text = reformat(file_text)
     word_list = file_text.split()
-    histogram = defaultdict()
+    histogram = defaultdict(int)
     for word in word_list:
         histogram[word] += 1
-    return histogram
+    return dict(histogram)
 
 
 # Read file.
 with open('sample.txt') as f:
     file_text = f.read()
+
+histogram_dict = word_frequency(file_text)
 
 
 # Create Dictionary.
