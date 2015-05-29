@@ -31,8 +31,8 @@ def word_frequency(file_text):
 
 # Takes a dictionary and returns a list of tuples of the top number of words.
 def top_words(word_dictionary, number):
-    word_list = [x for x in word_dictionary.items()]
-    word_list.sort(key=lambda tuple_: -tuple_[1])
+    word_list = [pair for pair in word_dictionary.items()]
+    word_list.sort(key=lambda pair: -pair[1])
     return word_list[:number]
 
 
